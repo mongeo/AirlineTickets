@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Geoff\'s Airline Tickets</string>
+    //menu
+    <string name="welcome_text">Welcome to \nGeoff\'s Airline Tickets</string>
+    <string name="create_account_button">Create Account</string>
+    <string name="reserve_seat_button">Reserve Seat</string>
+    <string name="cancel_reservation_button">Cancel Reservation</string>
+    <string name="manage_system_button">Manage System</string>
+
+
+    //toasts
+    <string name="hello_toast">Hello World!</string>
+
+    //create account
+    <string name="welcome_create_account_text">Please enter your username and password.</string>
+    <string name="create_account_instructions_text">"Tip: Usernames/passwords must have at least 1 number and 3 alphabetical letters."</string>
+    <string name="submit_create_account_button">Create Account</string>
+</resources>
