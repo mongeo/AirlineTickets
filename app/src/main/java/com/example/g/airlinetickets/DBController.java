@@ -20,11 +20,17 @@ public class DBController {
         return sDBController;
     }
 
+    //User functions
     public boolean userExists(String user){
         return mDataBaseHelper.userExists(user);
     }
 
     public boolean addUser(String username, String password){
         return mDataBaseHelper.addUser(username, password);
+    }
+
+    //Transaction functions
+    public boolean addTransaction(String username){
+        return mDataBaseHelper.addTransaction(username);
     }
 }

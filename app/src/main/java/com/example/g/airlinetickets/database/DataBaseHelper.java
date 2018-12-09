@@ -6,7 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.g.airlinetickets.Transaction;
 import com.example.g.airlinetickets.User;
+
+import java.text.SimpleDateFormat;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String LOG = "DatabaseHelper";
@@ -52,7 +55,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     TransactionSchema.TransactionTable.Cols.TYPE + ","+
                     TransactionSchema.TransactionTable.Cols.UNAME + ","+
                     TransactionSchema.TransactionTable.Cols.FLIGHT_NUM + ","+
-                    TransactionSchema.TransactionTable.Cols.RESERVATION_NUM + ")";
+                    TransactionSchema.TransactionTable.Cols.RESERVATION_NUM + ","+
+                    TransactionSchema.TransactionTable.Cols.DATE + ")";
 
     private SQLiteDatabase db;
 
@@ -77,7 +81,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean addUser(String username, String password){
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         User user = new User(username, password);
 
         ContentValues values = new ContentValues();
@@ -89,6 +93,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         // insert row
         db.insert(UserSchema.UserTable.NAME, null, values);
+        return true;
+    }
+
+    //Transaction functions
+    //user created
+    public boolean addTransaction(String username){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Transaction transaction = new Transaction("UserCreated", username, "null", "null");
+
+        ContentValues values = new ContentValues();
+
+        values.put(TransactionSchema.TransactionTable.Cols.UUID, transaction.getTransactionID().toString());
+        values.put(TransactionSchema.TransactionTable.Cols.TYPE, transaction.getTransactionType());
+        values.put(TransactionSchema.TransactionTable.Cols.UNAME, transaction.getUname());
+        values.put(TransactionSchema.TransactionTable.Cols.FLIGHT_NUM, transaction.getFlightNum());
+        values.put(TransactionSchema.TransactionTable.Cols.RESERVATION_NUM, transaction.getReservationNum());
+        values.put(TransactionSchema.TransactionTable.Cols.DATE, transaction.getDate().getTime());
+
+        // insert row
+        db.insert(TransactionSchema.TransactionTable.NAME, null, values);
         return true;
     }
 

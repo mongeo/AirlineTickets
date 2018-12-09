@@ -40,7 +40,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
 
         //test pass
-        //test user
         alphaCount = 0;
         numericCount = 0;
         for (int i = 0; i < password.length(); i++){
@@ -98,6 +97,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                     //user is added
                     else {
                         dbController.addUser(name, pass);
+                        dbController.addTransaction(name);
                         Toast.makeText(CreateAccountActivity.this,
                                 "User " + name + " created!",
                                 Toast.LENGTH_SHORT).show();

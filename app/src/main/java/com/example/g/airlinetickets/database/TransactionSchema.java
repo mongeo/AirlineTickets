@@ -13,7 +13,6 @@ public class TransactionSchema {
             public static final String FLIGHT_NUM = "flightNum";
             public static final String RESERVATION_NUM = "reservationNum";
             public static final String DATE = "date";
-            public static final String TIME = "time";
         }
     }
 }
