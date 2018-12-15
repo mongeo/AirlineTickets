@@ -1,5 +1,10 @@
 package com.example.g.airlinetickets;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +25,8 @@ public class CreateAccountActivity extends AppCompatActivity {
     private String pass;
 
     private int count;
+
+    protected Context mContext;
 
     private boolean validCredentials(String username, String password){
         boolean validUser = false;
@@ -62,12 +69,17 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-        dbController = DBController.get(this.getApplicationContext());
+        mContext = this.getApplicationContext();
+
+        dbController = DBController.get(mContext);
 
         count = 0;
 
         mCreateAccountUsernameField = (TextView) findViewById(R.id.create_account_username_field);
         mCreateAccountPasswordField = (TextView) findViewById(R.id.create_account_password_field);
+
+
+
 
         mSubmitCreateAccountButton = (Button) findViewById(R.id.submit_create_account_button);
         mSubmitCreateAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -76,21 +88,39 @@ public class CreateAccountActivity extends AppCompatActivity {
                 name = mCreateAccountUsernameField.getText().toString();
                 pass = mCreateAccountPasswordField.getText().toString();
 
-                if (count > 0){
-                    count = 0;
-                    finish();
+                boolean exists = dbController.userExists(name);
+                boolean valid = validCredentials(name, pass);
+
+                if (count > 0 && (exists || !valid )){
+                    String errorText = "";
+
+                    if (!validCredentials(name, pass)){
+                        errorText = "Invalid format.";
+                    } else if (dbController.userExists(name) == true){
+                        errorText = "Username already exists.";
+                    }
+                    AlertDialog createdUnsuccessfullyAlert = new AlertDialog.Builder(CreateAccountActivity.this).create();
+                    createdUnsuccessfullyAlert.setTitle("Unsuccessful");
+                    createdUnsuccessfullyAlert.setMessage(errorText);
+                    createdUnsuccessfullyAlert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            });
+                    createdUnsuccessfullyAlert.show();
                 } else {
                     //check if proper format
-                    if (!validCredentials(name, pass)){
+                    if (!valid){
                         Toast.makeText(CreateAccountActivity.this,
-                                "Invalid format",
+                                "Invalid format.",
                                 Toast.LENGTH_SHORT).show();
                     }
 
                     //check if user already exists
-                    else if (dbController.userExists(name) == true){
+                    else if (exists){
                         Toast.makeText(CreateAccountActivity.this,
-                                "User already name exists",
+                                "Username already exist.",
                                 Toast.LENGTH_SHORT).show();
                     }
 
@@ -98,10 +128,23 @@ public class CreateAccountActivity extends AppCompatActivity {
                     else {
                         dbController.addUser(name, pass);
                         dbController.addTransaction(name);
-                        Toast.makeText(CreateAccountActivity.this,
-                                "User " + name + " created!",
-                                Toast.LENGTH_SHORT).show();
-                        finish();
+
+
+                        AlertDialog createdSuccessfullyAlert = new AlertDialog.Builder(CreateAccountActivity.this).create();
+                        createdSuccessfullyAlert.setTitle("Success!");
+                        createdSuccessfullyAlert.setMessage("User " + name + " created successfully!");
+                        createdSuccessfullyAlert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                });
+                        createdSuccessfullyAlert.show();
+
+                        //Toast.makeText(CreateAccountActivity.this,
+                        //        "User " + name + " created!",
+                        //        Toast.LENGTH_SHORT).show();
+
                     }
 
                     count++;

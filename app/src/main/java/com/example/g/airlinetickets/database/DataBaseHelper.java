@@ -123,6 +123,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FLIGHT);
         db.execSQL(CREATE_TABLE_RESERVATION);
         db.execSQL(CREATE_TABLE_TRANSACTION);
+        addUser("admin2","admin2");
+        addUser("alice5","csumb100");
+        addUser("brian77","123ABC");
+        addUser("chris21","CHRIS21");
     }
 
     @Override
